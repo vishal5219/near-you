@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="High-quality video calling application with LiveKit integration"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Preconnect to external domains for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- LiveKit styles -->
+    <link rel="stylesheet" href="https://unpkg.com/@livekit/components-styles@1.0.0/dist/index.css" />
+    
+    <title>Video Call App</title>
+    
+    <style>
+      /* Custom CSS variables for theming */
+      :root {
+        --primary-color: #3b82f6;
+        --primary-dark: #2563eb;
+        --secondary-color: #64748b;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --error-color: #ef4444;
+        --background-color: #ffffff;
+        --surface-color: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+
+      /* Dark theme variables */
+      [data-theme="dark"] {
+        --background-color: #0f172a;
+        --surface-color: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+      }
+
+      /* Base styles */
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: var(--background-color);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      code {
+        font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+          monospace;
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--surface-color);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--secondary-color);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-secondary);
+      }
+
+      /* Focus styles for accessibility */
+      *:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+
+      /* Loading spinner */
+      .loading-spinner {
+        border: 2px solid var(--border-color);
+        border-top: 2px solid var(--primary-color);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Toast notifications */
+      .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 9999;
+      }
+
+      /* Video call specific styles */
+      .video-grid {
+        display: grid;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .video-grid.grid-1 { grid-template-columns: 1fr; }
+      .video-grid.grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .video-grid.grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .video-grid.grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .video-grid.grid-5 { grid-template-columns: repeat(3, 1fr); }
+      .video-grid.grid-6 { grid-template-columns: repeat(3, 1fr); }
+      .video-grid.grid-7 { grid-template-columns: repeat(3, 1fr); }
+      .video-grid.grid-8 { grid-template-columns: repeat(3, 1fr); }
+      .video-grid.grid-9 { grid-template-columns: repeat(3, 1fr); }
+
+      @media (min-width: 768px) {
+        .video-grid.grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .video-grid.grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .video-grid.grid-5 { grid-template-columns: repeat(3, 1fr); }
+        .video-grid.grid-6 { grid-template-columns: repeat(3, 1fr); }
+        .video-grid.grid-7 { grid-template-columns: repeat(4, 1fr); }
+        .video-grid.grid-8 { grid-template-columns: repeat(4, 1fr); }
+        .video-grid.grid-9 { grid-template-columns: repeat(3, 1fr); }
+      }
+
+      @media (min-width: 1024px) {
+        .video-grid.grid-5 { grid-template-columns: repeat(5, 1fr); }
+        .video-grid.grid-6 { grid-template-columns: repeat(6, 1fr); }
+        .video-grid.grid-7 { grid-template-columns: repeat(4, 1fr); }
+        .video-grid.grid-8 { grid-template-columns: repeat(4, 1fr); }
+        .video-grid.grid-9 { grid-template-columns: repeat(3, 1fr); }
+      }
+
+      /* Responsive design */
+      @media (max-width: 640px) {
+        .video-grid {
+          padding: 0.5rem;
+          gap: 0.5rem;
+        }
+      }
+
+      /* Animation classes */
+      .fade-in {
+        animation: fadeIn 0.3s ease-in;
+      }
+
+      .slide-up {
+        animation: slideUp 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html> 

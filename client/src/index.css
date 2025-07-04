@@ -1,0 +1,367 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS variables for theming */
+:root {
+  --primary-color: #3b82f6;
+  --primary-dark: #2563eb;
+  --secondary-color: #64748b;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --background-color: #ffffff;
+  --surface-color: #f8fafc;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Dark theme variables */
+[data-theme="dark"] {
+  --background-color: #0f172a;
+  --surface-color: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+}
+
+/* Base styles */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Focus styles for accessibility */
+  *:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+
+  /* Remove focus outline for mouse users */
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--surface-color);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+  }
+
+  /* Selection styles */
+  ::selection {
+    background-color: var(--primary-color);
+    color: white;
+  }
+}
+
+/* Component styles */
+@layer components {
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary-100 text-secondary-900 hover:bg-secondary-200 focus:ring-secondary-500;
+  }
+
+  .btn-success {
+    @apply btn bg-success-600 text-white hover:bg-success-700 focus:ring-success-500;
+  }
+
+  .btn-warning {
+    @apply btn bg-warning-600 text-white hover:bg-warning-700 focus:ring-warning-500;
+  }
+
+  .btn-error {
+    @apply btn bg-error-600 text-white hover:bg-error-700 focus:ring-error-500;
+  }
+
+  .btn-outline {
+    @apply btn border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-primary-500;
+  }
+
+  .btn-ghost {
+    @apply btn border-transparent text-gray-700 bg-transparent hover:bg-gray-100 focus:ring-gray-500;
+  }
+
+  /* Input styles */
+  .input {
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm;
+  }
+
+  .input-error {
+    @apply input border-error-300 focus:ring-error-500 focus:border-error-500;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200;
+  }
+
+  .card-header {
+    @apply px-4 py-5 sm:px-6 border-b border-gray-200;
+  }
+
+  .card-body {
+    @apply px-4 py-5 sm:p-6;
+  }
+
+  .card-footer {
+    @apply px-4 py-4 sm:px-6 bg-gray-50 border-t border-gray-200;
+  }
+
+  /* Modal styles */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+  }
+
+  .modal-content {
+    @apply bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto;
+  }
+
+  /* Video call specific styles */
+  .video-container {
+    @apply relative bg-gray-900 rounded-lg overflow-hidden;
+    aspect-ratio: 16/9;
+  }
+
+  .video-grid {
+    @apply grid gap-4 p-4;
+  }
+
+  .video-grid.grid-1 { @apply grid-cols-1; }
+  .video-grid.grid-2 { @apply grid-cols-2; }
+  .video-grid.grid-3 { @apply grid-cols-2 md:grid-cols-3; }
+  .video-grid.grid-4 { @apply grid-cols-2 md:grid-cols-4; }
+  .video-grid.grid-5 { @apply grid-cols-3 md:grid-cols-5; }
+  .video-grid.grid-6 { @apply grid-cols-3 md:grid-cols-6; }
+  .video-grid.grid-7 { @apply grid-cols-4 md:grid-cols-4; }
+  .video-grid.grid-8 { @apply grid-cols-4 md:grid-cols-4; }
+  .video-grid.grid-9 { @apply grid-cols-3 md:grid-cols-3; }
+
+  /* Control bar styles */
+  .control-bar {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-center space-x-4 z-40;
+  }
+
+  .control-button {
+    @apply flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200;
+  }
+
+  .control-button.active {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+
+  .control-button.error {
+    @apply bg-error-600 text-white hover:bg-error-700;
+  }
+
+  /* Loading spinner */
+  .loading-spinner {
+    @apply inline-block w-4 h-4 border-2 border-gray-300 border-t-primary-600 rounded-full animate-spin;
+  }
+
+  /* Toast styles */
+  .toast {
+    @apply bg-white border border-gray-200 rounded-lg shadow-lg p-4;
+  }
+
+  .toast-success {
+    @apply border-success-200 bg-success-50;
+  }
+
+  .toast-error {
+    @apply border-error-200 bg-error-50;
+  }
+
+  .toast-warning {
+    @apply border-warning-200 bg-warning-50;
+  }
+
+  /* Animation classes */
+  .fade-in {
+    @apply animate-fade-in;
+  }
+
+  .slide-up {
+    @apply animate-slide-up;
+  }
+
+  .scale-in {
+    @apply animate-scale-in;
+  }
+
+  /* Responsive utilities */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* LiveKit component overrides */
+  .lk-focus-layout {
+    @apply bg-gray-900;
+  }
+
+  .lk-participant-tile {
+    @apply rounded-lg overflow-hidden;
+  }
+
+  .lk-control-bar {
+    @apply bg-white border-t border-gray-200;
+  }
+
+  .lk-button {
+    @apply control-button;
+  }
+
+  .lk-button.active {
+    @apply control-button active;
+  }
+
+  .lk-button.error {
+    @apply control-button error;
+  }
+}
+
+/* Utility styles */
+@layer utilities {
+  /* Text utilities */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent;
+  }
+
+  /* Background utilities */
+  .bg-gradient-primary {
+    @apply bg-gradient-to-r from-primary-600 to-primary-800;
+  }
+
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-r from-secondary-600 to-secondary-800;
+  }
+
+  /* Border utilities */
+  .border-gradient {
+    @apply border border-transparent bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-border;
+  }
+
+  /* Shadow utilities */
+  .shadow-glow {
+    @apply shadow-glow;
+  }
+
+  .shadow-glow-lg {
+    @apply shadow-glow-lg;
+  }
+
+  /* Animation utilities */
+  .animate-bounce-gentle {
+    @apply animate-bounce-gentle;
+  }
+
+  .animate-pulse-slow {
+    @apply animate-pulse-slow;
+  }
+
+  .animate-spin-slow {
+    @apply animate-spin-slow;
+  }
+
+  /* Responsive utilities */
+  .aspect-video {
+    aspect-ratio: 16/9;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1/1;
+  }
+
+  /* Custom utilities for video calls */
+  .video-placeholder {
+    @apply bg-gray-800 flex items-center justify-center text-gray-400;
+  }
+
+  .participant-name {
+    @apply absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm;
+  }
+
+  .connection-status {
+    @apply absolute top-2 right-2 w-3 h-3 rounded-full;
+  }
+
+  .connection-status.connected {
+    @apply bg-success-500;
+  }
+
+  .connection-status.disconnected {
+    @apply bg-error-500;
+  }
+
+  .connection-status.reconnecting {
+    @apply bg-warning-500 animate-pulse;
+  }
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  .dark .card {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .dark .input {
+    @apply bg-gray-800 border-gray-600 text-white placeholder-gray-400;
+  }
+
+  .dark .control-bar {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .dark .control-button {
+    @apply bg-gray-700 hover:bg-gray-600;
+  }
+
+  .dark .modal-content {
+    @apply bg-gray-800;
+  }
+
+  .dark .toast {
+    @apply bg-gray-800 border-gray-700;
+  }
+} 
