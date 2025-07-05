@@ -7,9 +7,9 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 
 const connectDB = require('./config/database');
-const connectRedis = require('./config/redis');
-const logger = require('./utils/logger');
-const errorHandler = require('./middleware/errorHandler');
+const { connectRedis } = require('./config/redis');
+const { logger, logRequest } = require('./utils/logger');
+const { errorHandler, notFound } = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
 const roomRoutes = require('./routes/rooms');
 const tokenRoutes = require('./routes/tokens');
@@ -66,6 +66,7 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({
@@ -75,6 +76,8 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV
   });
 });
+
+app.use(logRequest);
 
 // API routes
 app.use('/api/auth', authRoutes);
@@ -101,6 +104,7 @@ app.use('*', (req, res) => {
 });
 
 // Error handling middleware
+app.use(notFound);
 app.use(errorHandler);
 
 // Graceful shutdown
@@ -129,14 +133,8 @@ process.on('uncaughtException', (err) => {
 // Start server
 const startServer = async () => {
   try {
-    console.log('Connecting to MongoDB...');
     await connectDB();
-    console.log('MongoDB connected');
-
-    console.log('Connecting to Redis...');
     await connectRedis();
-    console.log('Redis connected');
-
     app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
     });
