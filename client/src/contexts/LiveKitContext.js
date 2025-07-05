@@ -41,7 +41,6 @@ const LIVEKIT_ACTIONS = {
   SET_ROOM_DATA: 'SET_ROOM_DATA',
   RESET: 'RESET',
 };
-
 // Reducer
 function livekitReducer(state, action) {
   switch (action.type) {
@@ -168,61 +167,6 @@ export function LiveKitProvider({ children }) {
     }
   }, [user]);
 
-  // Connect to room
-  const connectToRoom = useCallback(async (roomId, participantName = null) => {
-    try {
-      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTING, payload: true });
-      dispatch({ type: LIVEKIT_ACTIONS.CLEAR_ERROR });
-
-      // Get room token
-      const { token, room } = await getRoomToken(roomId, participantName);
-
-      // Create room instance
-      const livekitRoom = new Room({
-        adaptiveStream: true,
-        dynacast: true,
-        publishDefaults: {
-          simulcast: true,
-        },
-      });
-
-      // Set up room event listeners
-      setupRoomEventListeners(livekitRoom);
-
-      // Connect to room
-      await livekitRoom.connect(room.livekitUrl, token, {
-        autoSubscribe: true,
-      });
-
-      dispatch({ type: LIVEKIT_ACTIONS.SET_ROOM, payload: livekitRoom });
-      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTED, payload: true });
-      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTING, payload: false });
-
-      toast.success('Connected to room successfully!');
-
-      return livekitRoom;
-    } catch (error) {
-      console.error('Failed to connect to room:', error);
-      dispatch({ type: LIVEKIT_ACTIONS.SET_ERROR, payload: error.message });
-      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTING, payload: false });
-      toast.error('Failed to connect to room');
-      throw error;
-    }
-  }, [getRoomToken, setupRoomEventListeners]);
-
-  // Disconnect from room
-  const disconnectFromRoom = useCallback(async () => {
-    if (state.room) {
-      try {
-        await state.room.disconnect();
-        dispatch({ type: LIVEKIT_ACTIONS.RESET });
-        toast.success('Disconnected from room');
-      } catch (error) {
-        console.error('Error disconnecting from room:', error);
-      }
-    }
-  }, [state.room]);
-
   // Update participant tracks
   const updateParticipantTracks = useCallback((participant) => {
     const audioTrack = participant.getTrack(Track.Source.Microphone);
@@ -330,6 +274,61 @@ export function LiveKitProvider({ children }) {
       toast.info('Recording stopped');
     });
   }, [updateParticipantTracks]);
+
+  // Connect to room
+  const connectToRoom = useCallback(async (roomId, participantName = null) => {
+    try {
+      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTING, payload: true });
+      dispatch({ type: LIVEKIT_ACTIONS.CLEAR_ERROR });
+
+      // Get room token
+      const { token, room } = await getRoomToken(roomId, participantName);
+
+      // Create room instance
+      const livekitRoom = new Room({
+        adaptiveStream: true,
+        dynacast: true,
+        publishDefaults: {
+          simulcast: true,
+        },
+      });
+
+      // Set up room event listeners
+      setupRoomEventListeners(livekitRoom);
+
+      // Connect to room
+      await livekitRoom.connect(room.livekitUrl, token, {
+        autoSubscribe: true,
+      });
+
+      dispatch({ type: LIVEKIT_ACTIONS.SET_ROOM, payload: livekitRoom });
+      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTED, payload: true });
+      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTING, payload: false });
+
+      toast.success('Connected to room successfully!');
+
+      return livekitRoom;
+    } catch (error) {
+      console.error('Failed to connect to room:', error);
+      dispatch({ type: LIVEKIT_ACTIONS.SET_ERROR, payload: error.message });
+      dispatch({ type: LIVEKIT_ACTIONS.SET_CONNECTING, payload: false });
+      toast.error('Failed to connect to room');
+      throw error;
+    }
+  }, [getRoomToken, setupRoomEventListeners]);
+
+  // Disconnect from room
+  const disconnectFromRoom = useCallback(async () => {
+    if (state.room) {
+      try {
+        await state.room.disconnect();
+        dispatch({ type: LIVEKIT_ACTIONS.RESET });
+        toast.success('Disconnected from room');
+      } catch (error) {
+        console.error('Error disconnecting from room:', error);
+      }
+    }
+  }, [state.room]);
 
   // Toggle audio
   const toggleAudio = useCallback(async () => {

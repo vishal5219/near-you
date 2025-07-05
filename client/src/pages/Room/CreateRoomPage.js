@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 
 const CreateRoomPage = () => {
@@ -11,7 +10,6 @@ const CreateRoomPage = () => {
   });
   const [loading, setLoading] = useState(false);
   
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
