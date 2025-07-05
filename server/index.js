@@ -1,10 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-require('dotenv').config();
 
 const connectDB = require('./config/database');
 const connectRedis = require('./config/redis');
@@ -86,7 +86,7 @@ app.use('/api/recordings', recordingRoutes);
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
-  
+
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
@@ -129,10 +129,14 @@ process.on('uncaughtException', (err) => {
 // Start server
 const startServer = async () => {
   try {
-    // Connect to databases
+    console.log('Connecting to MongoDB...');
     await connectDB();
+    console.log('MongoDB connected');
+
+    console.log('Connecting to Redis...');
     await connectRedis();
-    
+    console.log('Redis connected');
+
     app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
     });

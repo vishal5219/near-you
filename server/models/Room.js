@@ -283,7 +283,7 @@ roomSchema.virtual('status').get(function() {
 });
 
 // Indexes for better query performance
-roomSchema.index({ roomId: 1 });
+// roomSchema.index({ roomId: 1 });
 roomSchema.index({ owner: 1 });
 roomSchema.index({ type: 1 });
 roomSchema.index({ isActive: 1 });
