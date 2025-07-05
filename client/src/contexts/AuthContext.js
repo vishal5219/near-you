@@ -93,7 +93,7 @@ export function AuthProvider({ children }) {
   }, [state.token]);
 
   // Fetch user profile on mount if token exists
-  const { data: userData, error: userError } = useQuery(
+  useQuery(
     ['user', 'profile'],
     () => api.get('/api/auth/me').then(res => res.data.data.user),
     {

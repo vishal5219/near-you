@@ -90,6 +90,7 @@
 
 /* Component styles */
 @layer components {
+
   /* Button styles */
   .btn {
     @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
@@ -168,15 +169,41 @@
     @apply grid gap-4 p-4;
   }
 
-  .video-grid.grid-1 { @apply grid-cols-1; }
-  .video-grid.grid-2 { @apply grid-cols-2; }
-  .video-grid.grid-3 { @apply grid-cols-2 md:grid-cols-3; }
-  .video-grid.grid-4 { @apply grid-cols-2 md:grid-cols-4; }
-  .video-grid.grid-5 { @apply grid-cols-3 md:grid-cols-5; }
-  .video-grid.grid-6 { @apply grid-cols-3 md:grid-cols-6; }
-  .video-grid.grid-7 { @apply grid-cols-4 md:grid-cols-4; }
-  .video-grid.grid-8 { @apply grid-cols-4 md:grid-cols-4; }
-  .video-grid.grid-9 { @apply grid-cols-3 md:grid-cols-3; }
+  .video-grid.grid-1 {
+    @apply grid-cols-1;
+  }
+
+  .video-grid.grid-2 {
+    @apply grid-cols-2;
+  }
+
+  .video-grid.grid-3 {
+    @apply grid-cols-2 md:grid-cols-3;
+  }
+
+  .video-grid.grid-4 {
+    @apply grid-cols-2 md:grid-cols-4;
+  }
+
+  .video-grid.grid-5 {
+    @apply grid-cols-3 md:grid-cols-5;
+  }
+
+  .video-grid.grid-6 {
+    @apply grid-cols-3 md:grid-cols-6;
+  }
+
+  .video-grid.grid-7 {
+    @apply grid-cols-4 md:grid-cols-4;
+  }
+
+  .video-grid.grid-8 {
+    @apply grid-cols-4 md:grid-cols-4;
+  }
+
+  .video-grid.grid-9 {
+    @apply grid-cols-3 md:grid-cols-3;
+  }
 
   /* Control bar styles */
   .control-bar {
@@ -191,8 +218,8 @@
     @apply bg-primary-600 text-white hover:bg-primary-700;
   }
 
-  .control-button.error {
-    @apply bg-error-600 text-white hover:bg-error-700;
+  .control-button-error {
+    @apply px-4 py-2 rounded bg-error-600 text-white hover:bg-error-700;
   }
 
   /* Loading spinner */
@@ -256,13 +283,14 @@
     @apply control-button active;
   }
 
-  .lk-button.error {
-    @apply control-button error;
+  .lk-button-error {
+    @apply px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700;
   }
 }
 
 /* Utility styles */
 @layer utilities {
+
   /* Text utilities */
   .text-gradient {
     @apply bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent;
@@ -364,4 +392,4 @@
   .dark .toast {
     @apply bg-gray-800 border-gray-700;
   }
-} 
+}

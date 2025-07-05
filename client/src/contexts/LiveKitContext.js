@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
-import { Room, RoomEvent, RemoteParticipant, LocalParticipant, Track, TrackPublication, RemoteTrackPublication } from 'livekit-client';
+import { Room, RoomEvent, Track } from 'livekit-client';
 import { useAuth } from './AuthContext';
 import { apiService } from '../services/api';
 import toast from 'react-hot-toast';
@@ -208,7 +208,7 @@ export function LiveKitProvider({ children }) {
       toast.error('Failed to connect to room');
       throw error;
     }
-  }, [getRoomToken]);
+  }, [getRoomToken, setupRoomEventListeners]);
 
   // Disconnect from room
   const disconnectFromRoom = useCallback(async () => {
@@ -222,6 +222,26 @@ export function LiveKitProvider({ children }) {
       }
     }
   }, [state.room]);
+
+  // Update participant tracks
+  const updateParticipantTracks = useCallback((participant) => {
+    const audioTrack = participant.getTrack(Track.Source.Microphone);
+    const videoTrack = participant.getTrack(Track.Source.Camera);
+    const screenShareTrack = participant.getTrack(Track.Source.ScreenShare);
+
+    dispatch({
+      type: LIVEKIT_ACTIONS.UPDATE_PARTICIPANT,
+      payload: {
+        identity: participant.identity,
+        audioTrack: audioTrack?.isSubscribed ? audioTrack : null,
+        videoTrack: videoTrack?.isSubscribed ? videoTrack : null,
+        screenShareTrack: screenShareTrack?.isSubscribed ? screenShareTrack : null,
+        isAudioEnabled: audioTrack?.isMuted === false,
+        isVideoEnabled: videoTrack?.isMuted === false,
+        isScreenSharing: !!screenShareTrack?.isSubscribed,
+      },
+    });
+  }, []);
 
   // Setup room event listeners
   const setupRoomEventListeners = useCallback((room) => {
@@ -309,27 +329,7 @@ export function LiveKitProvider({ children }) {
       dispatch({ type: LIVEKIT_ACTIONS.SET_RECORDING, payload: false });
       toast.info('Recording stopped');
     });
-  }, []);
-
-  // Update participant tracks
-  const updateParticipantTracks = useCallback((participant) => {
-    const audioTrack = participant.getTrack(Track.Source.Microphone);
-    const videoTrack = participant.getTrack(Track.Source.Camera);
-    const screenShareTrack = participant.getTrack(Track.Source.ScreenShare);
-
-    dispatch({
-      type: LIVEKIT_ACTIONS.UPDATE_PARTICIPANT,
-      payload: {
-        identity: participant.identity,
-        audioTrack: audioTrack?.isSubscribed ? audioTrack : null,
-        videoTrack: videoTrack?.isSubscribed ? videoTrack : null,
-        screenShareTrack: screenShareTrack?.isSubscribed ? screenShareTrack : null,
-        isAudioEnabled: audioTrack?.isMuted === false,
-        isVideoEnabled: videoTrack?.isMuted === false,
-        isScreenSharing: !!screenShareTrack?.isSubscribed,
-      },
-    });
-  }, []);
+  }, [updateParticipantTracks]);
 
   // Toggle audio
   const toggleAudio = useCallback(async () => {
